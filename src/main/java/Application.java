@@ -1,4 +1,7 @@
+import user.UserResource;
+
 import javax.ws.rs.ApplicationPath;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -9,6 +12,8 @@ import java.util.Set;
 public class Application extends javax.ws.rs.core.Application{
     @Override
     public Set<Class<?>> getClasses() {
-        return super.getClasses();
+        Set<Class<?>> classes = new HashSet<>();
+        classes.add(UserResource.class);
+        return classes;
     }
 }
