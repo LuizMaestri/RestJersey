@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 public abstract class EntityDao<T extends EntityMap> {
 
     private Class<T> clazz;
-    private Session session;
+    protected Session session;
     private Transaction transaction;
 
     protected EntityDao(){
@@ -29,12 +30,12 @@ public abstract class EntityDao<T extends EntityMap> {
         session = factory.openSession();
     }
 
-    private void openTransaction(){
+    protected void openTransaction(){
         this.openSession();
         transaction = session.beginTransaction();
     }
 
-    private void closeTransaction(){
+    protected void closeTransaction(){
         session.flush();
         transaction.commit();
         session.close();
@@ -52,7 +53,8 @@ public abstract class EntityDao<T extends EntityMap> {
     public List<T> list(){
         this.openTransaction();
         Query query = session.createQuery("from " + clazz.getName());
-        List<T> entities = (List<T>) query.list();
+        List<T> entities = new ArrayList<>();
+        query.list().forEach(entity -> entities.add((T) entity));
         this.closeTransaction();
         return entities;
     }
