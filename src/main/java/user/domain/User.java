@@ -1,13 +1,12 @@
 package user.domain;
 
+import auth.domain.Token;
 import dao.EntityMap;
-import usermachine.domain.MachineUser;
 import org.hibernate.annotations.ColumnTransformer;
+import usermachine.domain.MachineUser;
 
 import javax.persistence.*;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -39,6 +38,8 @@ public class User extends EntityMap{
     private Status status;
     @OneToMany(fetch = LAZY, mappedBy = "id.user", cascade = ALL)
     private Set<MachineUser> machines;
+    @OneToMany(fetch = LAZY, mappedBy = "user", cascade = ALL)
+    private Set<Token> tokens;
 
     protected User(){
         this.setMachines(new HashSet<>());
@@ -92,4 +93,11 @@ public class User extends EntityMap{
         this.machines = machines;
     }
 
+    public Set<Token> getTokens() {
+        return this.tokens;
+    }
+
+    public void setTokens(Set<Token> tokens) {
+        this.tokens = tokens;
+    }
 }
