@@ -1,16 +1,17 @@
 package usermachine;
 
+import machine.MachineDao;
 import machine.domain.Machine;
 import response.ResponseFactory;
 import user.UserDao;
 import user.domain.User;
 import usermachine.domain.MachineUser;
 import usermachine.dto.MachineUpDto;
+import usermachine.dto.MachineUserCreateDto;
 import usermachine.dto.MachineUserDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-
 import java.util.Set;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -33,7 +34,7 @@ public class MachineUserResource {
 
     @PUT
     @Path("machines/changestatus")
-    @Consumes
+    @Consumes(APPLICATION_JSON)
     public Response upMachine(MachineUpDto machineUp){
         Long codUser = machineUp.getCodUser();
         User user = UserDao.getInstance().get(codUser);
@@ -44,6 +45,23 @@ public class MachineUserResource {
                 machineUser.setActive(machineUp.isActive());
             }
         });
+        return ResponseFactory.response200();
+    }
+
+    @POST
+    @Path("machines/{codUser}")
+    @Consumes(APPLICATION_JSON)
+    public Response create(@PathParam("codUser") Long codUser, MachineUserCreateDto newMachine){
+        Long codMachine = newMachine.getCodMachine();
+        String nick = newMachine.getNickname();
+        User user = UserDao.getInstance().get(codUser);
+        Machine machine = MachineDao.getInstance().get(codMachine);
+        MachineUser newInstance = new MachineUser();
+        newInstance.setUser(user);
+        newInstance.setMachine(machine);
+        newInstance.setNickname(nick);
+        user.getMachines().add(newInstance);
+        UserDao.getInstance().save(user);
         return ResponseFactory.response200();
     }
 }

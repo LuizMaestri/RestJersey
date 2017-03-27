@@ -25,15 +25,15 @@ public class MachineUser extends EntityMap{
     @Column(name = "fl_active")
     private boolean active;
 
-    protected MachineUser(){
+    public MachineUser(){
         this.setId(new MachineUserId());
     }
 
-    public MachineUserId getId() {
+    private MachineUserId getId() {
         return this.id;
     }
 
-    public void setId(MachineUserId id) {
+    private void setId(MachineUserId id) {
         this.id = id;
     }
 
